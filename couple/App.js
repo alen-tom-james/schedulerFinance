@@ -1,5 +1,7 @@
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
+import { StatusBar } from 'react-native';
+
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -35,15 +37,17 @@ const TabNavigator = () => (
       inactiveTintColor: 'gray',
     }}
   >
-    <Tab.Screen name="Finances" component={FinancesScreen} />
-    <Tab.Screen name="Add Event" component={AddEventScreen} />
-    <Tab.Screen name="Calendar" component={CalendarScreen} />
+    <Tab.Screen name="Finances" component={FinancesScreen} options={{ headerShown: false }}/>
+    <Tab.Screen name="Add Event" component={AddEventScreen} options={{ headerShown: false }}/>
+    <Tab.Screen name="Calendar" component={CalendarScreen} options={{ headerShown: false }}/>
   </Tab.Navigator>
 );
 
 
 const App = () => {
   return (
+    <>
+    <StatusBar hidden={true} />
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen 
@@ -61,6 +65,7 @@ const App = () => {
         <Stack.Screen name="Settings" component={SettingsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
+    </>
   );
 };
 

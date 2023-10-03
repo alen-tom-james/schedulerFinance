@@ -1,17 +1,43 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { PanGestureHandler } from 'react-native-gesture-handler';
+import React, { useState, useRef } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
+import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
 
 const CalendarComponent = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [scrollEnabled, setScrollEnabled] = useState(true);
+  const carouselRef = useRef(null);
+  const panGestureRef = useRef(null);
 
   const changeMonth = (offset) => {
     setSelectedDate(new Date(selectedDate.setMonth(selectedDate.getMonth() + offset)));
   };
 
-  const renderCalendar = (date) => {
-    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+  const onGestureEvent = (event) => {
+    const offsetX = event.nativeEvent.translationX;
+    const direction = offsetX > 0 ? -1 : 1;
+    const absOffsetX = Math.abs(offsetX);
+    const threshold = styles.calendar.width / 2;
+    if (absOffsetX >= threshold) {
+      setScrollEnabled(false);
+      carouselRef.current.snapToItem(selectedDate.getMonth() + direction, true);
+      changeMonth(direction);
+      panGestureRef.current.setNativeProps({ enabled: false });
+      setTimeout(() => {
+        panGestureRef.current.setNativeProps({ enabled: true });
+      }, 500);
+    }
+  };
+
+  const onHandlerStateChange = (event) => {
+    if (event.nativeEvent.state === 5) {
+      setScrollEnabled(true);
+    }
+  };
+
+  const renderCalendar = ({ item }) => {
+    const date = new Date(selectedDate.getFullYear(), item, 1);
+    const firstDay = date.getDay();
     const daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 
     const daysArray = [];
@@ -25,8 +51,8 @@ const CalendarComponent = () => {
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
     return (
-      <View style={styles.calendar} key={date.getMonth()}>
-        <Text style={styles.monthHeading}>{months[date.getMonth()]} </Text>
+      <View style={styles.calendar} key={item}>
+        <Text style={styles.monthHeading}>{months[item]} </Text>
         <Text style={styles.yearHeading}>{date.getFullYear()}</Text>
         <View style={styles.headerRow}>
           {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, index) => (
@@ -51,21 +77,44 @@ const CalendarComponent = () => {
   };
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <ScrollView
-        horizontal
-        decelerationRate="slow"
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onMomentumScrollEnd={(e) => {
-          const offsetX = e.nativeEvent.contentOffset.x;
-          const direction = (offsetX > (selectedDate.getMonth() * styles.calendar.width)) ? 1 : -1;
-          changeMonth(direction);
-        }}
-        contentOffset={{ x: selectedDate.getMonth() * styles.calendar.width, y: 0 }}
+    <GestureHandlerRootView 
+    style={{ 
+      flex: 1,
+      left: 35
+    
+    }}>
+      <PanGestureHandler
+        ref={panGestureRef}
+        onGestureEvent={onGestureEvent}
+        onHandlerStateChange={onHandlerStateChange}
+        enabled={true}
+        activeOffsetX={[-20, 20]}
       >
-        {[...Array(12)].map((_, idx) => renderCalendar(new Date(selectedDate.getFullYear(), idx, 1)))}
-      </ScrollView>
+        <View>
+          <Carousel
+            ref={carouselRef}
+            data={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]}
+            renderItem={renderCalendar}
+            sliderWidth={styles.calendar.width}
+            itemWidth={styles.calendar.width}
+            onSnapToItem={(index) => setSelectedDate(new Date(selectedDate.getFullYear(), index, 1))}
+          />
+          <Pagination
+            dotsLength={12}
+            activeDotIndex={selectedDate.getMonth()}
+            containerStyle={{ paddingVertical: 10 }}
+            dotStyle={{
+              width: 10,
+              height: 10,
+              borderRadius: 5,
+              marginHorizontal: 8,
+              backgroundColor: 'rgba(255, 255, 255, 0.92)'
+            }}
+            inactiveDotOpacity={0.4}
+            inactiveDotScale={0.6}
+          />
+        </View>
+      </PanGestureHandler>
     </GestureHandlerRootView>
   );
 };
@@ -77,7 +126,7 @@ const styles = StyleSheet.create({
     top: 40,
   },
   monthHeading: {
-    fontSize: 75,
+    fontSize: 65,
     fontWeight: 'bold',
     fontFamily: 'Impact',
     textAlign: 'center',
@@ -90,7 +139,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontFamily: 'Impact',
     textAlign: 'center',
-    marginVertical: -20,
+    marginVertical: -16,
     opacity: .35,
     top: -40
   },

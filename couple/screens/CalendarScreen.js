@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Swiper from 'react-native-swiper';
+import CalendarComponent from './components/calendar.js';
 
 const CustomCalendar = () => {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -10,21 +11,14 @@ const CustomCalendar = () => {
 
   return (
     <Swiper style={styles.wrapper} horizontal={false} index={0} showsPagination={false}>
-      <View style={[styles.slide, styles.slide1]}>
-        <Text style={styles.monthHeading}>{months[currentMonth]}</Text>
-        <Calendar
-          //...your calendar props
-          onDayPress={(day) => setSelectedDate(day.dateString)}
-          onMonthChange={(month) => {
-            setCurrentMonth(month.month - 1);
-          }}
-        />
+      <View style={[styles.slide, styles.slideMonth]}>
+        <CalendarComponent/>
       </View>
-      <View style={[styles.slide, styles.slide2]}>
+      <View style={[styles.slide, styles.slideWeek]}>
         <Text style={styles.text}>Week View</Text>
         {/* Your week view component */}
       </View>
-      <View style={[styles.slide, styles.slide3]}>
+      <View style={[styles.slide, styles.slideDay]}>
         <Text style={styles.text}>Day View</Text>
         {/* Your day view component */}
       </View>
@@ -36,15 +30,14 @@ const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   wrapper: {
-    paddingTop: 50, // You may adjust this value
   },
   slide: {
-    height: windowHeight - 100,
+    height: 700,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 25,
     marginHorizontal: 0,
-    marginBottom: 50,
+    marginTop: 0,
     backgroundColor: 'white', // Ensuring a background color for the shadow to stand out
 
     // iOS shadow properties
@@ -56,27 +49,35 @@ const styles = StyleSheet.create({
     },
 
   },
-  slide1: {
+  slideMonth: {
     backgroundColor: '#9DD6EB',
+    height: 900,
+    marginTop: 110,
   },
-  slide2: {
+  slideWeek: {
     backgroundColor: '#97CAE5',
-    zIndex: '-1'
+    marginTop: 110,
+    height: 900,
+
+
   },
-  slide3: {
+  slideDay: {
     backgroundColor: '#92BBD9',
-  },
-  monthHeading: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginVertical: 10,
+    height: 1000,
+    marginTop: 110,
+
   },
   text: {
     color: '#fff',
     fontSize: 30,
     fontWeight: 'bold',
   },
+
+  Calendar: {
+    top: 500,
+    color: "#000"
+
+}
 });
 
 

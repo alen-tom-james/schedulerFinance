@@ -1,23 +1,41 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
 
-const BACK_YEARS = 1;
-const FORWARD_YEARS = 1;
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 const CalendarComponent = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const scrollX = useRef(new Animated.Value(0)).current;
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const scrollX = useRef(new Animated.Value(SCREEN_WIDTH)).current;
+  const scrollViewRef = useRef(null);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setSelectedDate(new Date());
-    }, 1000);
-    return () => clearInterval(intervalId);
-  }, []);
+    // Whenever the current month changes, scroll to the middle view (without animation) to create an illusion of infinite scrolling
+    scrollViewRef.current.scrollTo({ x: SCREEN_WIDTH, animated: false });
+  }, [currentMonth]);
+
+  const handleScroll = (event) => {
+    const offsetX = event.nativeEvent.contentOffset.x;
+
+    if (offsetX > SCREEN_WIDTH) {
+      // Swiped to the left, move to the next month
+      setCurrentMonth(prevMonth => {
+        const newMonth = new Date(prevMonth);
+        newMonth.setMonth(prevMonth.getMonth() + 1);
+        return newMonth;
+      });
+    } else if (offsetX < SCREEN_WIDTH) {
+      // Swiped to the right, move to the previous month
+      setCurrentMonth(prevMonth => {
+        const newMonth = new Date(prevMonth);
+        newMonth.setMonth(prevMonth.getMonth() - 1);
+        return newMonth;
+      });
+    }
+  };
 
   const renderCalendar = (monthOffset) => {
-    const targetDate = new Date(selectedDate);
+    const targetDate = new Date(currentMonth);
     targetDate.setMonth(targetDate.getMonth() + monthOffset);
     const year = targetDate.getFullYear();
     const month = targetDate.getMonth();
@@ -63,29 +81,24 @@ const CalendarComponent = () => {
   return (
     <View style={{ flex: 1 }}>
       <Animated.ScrollView
+        ref={scrollViewRef}
         horizontal
         pagingEnabled
-        scrollEventThrottle={16}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-          { useNativeDriver: false }
-        )}
+        onMomentumScrollEnd={handleScroll}
         showsHorizontalScrollIndicator={false}
-        // Set initial offset to center around the current month
-        contentOffset={{ x: SCREEN_WIDTH * BACK_YEARS * 12 }}
+        // Initially, scroll to the middle view
+        contentOffset={{ x: SCREEN_WIDTH }}
       >
-        {Array.from({ length: BACK_YEARS * 12 + FORWARD_YEARS * 12 + 12 }).map((_, index) => {
-          const monthOffset = index - BACK_YEARS * 12;
-          return (
-            <View style={{ width: SCREEN_WIDTH }} key={index}>
-              {renderCalendar(monthOffset)}
-            </View>
-          );
-        })}
+        {[-1, 0, 1].map((monthOffset) => (
+          <View style={{ width: SCREEN_WIDTH }} key={monthOffset}>
+            {renderCalendar(monthOffset)}
+          </View>
+        ))}
       </Animated.ScrollView>
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   calendar: {

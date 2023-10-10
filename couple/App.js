@@ -29,11 +29,13 @@ const TabNavigator = () => (
         return <Icon name={iconName} size={size} color={color} />;
       },
       tabBarLabel: () => null, // This will hide the label
+      "tabBarActiveTintColor": "lightblue",
+      "tabBarInactiveTintColor": "gray",
+      "tabBarStyle": [{
+        "display": "flex"
+      }, null ]
     })}
-    tabBarOptions={{
-      activeTintColor: 'tomato',
-      inactiveTintColor: 'gray',
-    }}
+
   >
     <Tab.Screen name="Calendar" component={CalendarScreen} options={{ headerShown: false }}/>
     <Tab.Screen name="Finances" component={FinancesScreen} options={{ headerShown: false }}/>

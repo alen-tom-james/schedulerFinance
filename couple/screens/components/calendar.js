@@ -1,13 +1,13 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Animated, PanResponder } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
 
-const BACK_YEARS = 5;
-const FORWARD_YEARS = 5;
+const BACK_YEARS = 10;
+const FORWARD_YEARS = 10;
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 const CalendarComponent = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [monthOffset, setMonthOffset] = useState(0);
-  const pan = useRef(new Animated.ValueXY()).current;
+  const scrollX = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -16,32 +16,9 @@ const CalendarComponent = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  const panResponder = PanResponder.create({
-    onMoveShouldSetPanResponder: () => true,
-    onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }], { useNativeDriver: false }),
-    onPanResponderRelease: () => {
-      if (pan.x._value > 50) {
-        // swipe right
-        previousMonth();
-      } else if (pan.x._value < -50) {
-        // swipe left
-        nextMonth();
-      }
-      Animated.spring(pan, { toValue: { x: 0, y: 0 }, useNativeDriver: false }).start();
-    }
-  });
-
-  const previousMonth = () => {
-    setMonthOffset((prev) => prev - 1);
-  };
-
-  const nextMonth = () => {
-    setMonthOffset((prev) => prev + 1);
-  };
-
   const renderCalendar = (monthOffset) => {
-    const targetDate = new Date();
-    targetDate.setMonth(selectedDate.getMonth() + monthOffset);
+    const targetDate = new Date(selectedDate);
+    targetDate.setMonth(targetDate.getMonth() + monthOffset);
     const year = targetDate.getFullYear();
     const month = targetDate.getMonth();
     const firstDay = new Date(year, month, 1).getDay();
@@ -67,6 +44,7 @@ const CalendarComponent = () => {
                 key={dayIndex} 
                 style={styles.dayCell} 
                 onPress={() => { if(day > 0) setSelectedDate(new Date(year, month, day)) }}
+                disabled
               >
                 <Text style={(day > 0 && day === selectedDate.getDate() && month === selectedDate.getMonth() && year === selectedDate.getFullYear()) ? styles.todayText : styles.dayText}>
                   {day > 0 ? day : ''}
@@ -80,15 +58,35 @@ const CalendarComponent = () => {
   };
 
   return (
-    <Animated.View {...panResponder.panHandlers} style={[pan.getLayout(), { flex: 1 }]}>
-      {renderCalendar(monthOffset)}
-    </Animated.View>
+    <View style={{ flex: 1 }}>
+      <Animated.ScrollView
+        horizontal
+        pagingEnabled
+        scrollEventThrottle={16}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+          { useNativeDriver: false }
+        )}
+        showsHorizontalScrollIndicator={false}
+        // Set initial offset to center around the current month
+        contentOffset={{ x: SCREEN_WIDTH * BACK_YEARS * 12 }}
+      >
+        {Array.from({ length: BACK_YEARS * 12 + FORWARD_YEARS * 12 + 12 }).map((_, index) => {
+          const monthOffset = index - BACK_YEARS * 12;
+          return (
+            <View style={{ width: SCREEN_WIDTH }} key={index}>
+              {renderCalendar(monthOffset)}
+            </View>
+          );
+        })}
+      </Animated.ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   calendar: {
-    width: 385,
+    width: SCREEN_WIDTH,
     padding: 15,
     top: 40,
   },

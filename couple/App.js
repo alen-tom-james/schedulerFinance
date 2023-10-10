@@ -9,7 +9,6 @@ import AddEventScreen from './screens/AddEventScreen';
 import CalendarScreen from './screens/CalendarScreen';
 import SettingsScreen from './screens/SettingsScreen';
 
-
 export const DateContext = createContext();
 
 const Tab = createBottomTabNavigator();

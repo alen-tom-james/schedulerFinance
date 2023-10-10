@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -8,6 +8,9 @@ import FinancesScreen from './screens/FinancesScreen';
 import AddEventScreen from './screens/AddEventScreen';
 import CalendarScreen from './screens/CalendarScreen';
 import SettingsScreen from './screens/SettingsScreen';
+
+
+export const DateContext = createContext();
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -29,13 +32,12 @@ const TabNavigator = () => (
         return <Icon name={iconName} size={size} color={color} />;
       },
       tabBarLabel: () => null, // This will hide the label
-      "tabBarActiveTintColor": "lightblue",
-      "tabBarInactiveTintColor": "gray",
-      "tabBarStyle": [{
-        "display": "flex"
+      tabBarActiveTintColor: "lightblue",
+      tabBarInactiveTintColor: "gray",
+      tabBarStyle: [{
+        display: "flex"
       }, null ]
     })}
-
   >
     <Tab.Screen name="Calendar" component={CalendarScreen} options={{ headerShown: false }}/>
     <Tab.Screen name="Finances" component={FinancesScreen} options={{ headerShown: false }}/>
@@ -43,35 +45,43 @@ const TabNavigator = () => (
   </Tab.Navigator>
 );
 
-
 const App = () => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
   return (
-    <>
-    
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen 
-          name="Home" 
-          component={TabNavigator} 
-          options={({ navigation }) => ({
-            title: '', // This will remove the "Home" title
-            headerRight: () => (
-              <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
-                <Icon name="gear" size={30} color="#000" style={{ 
-                  marginRight: 10,
-                  bottom: 11,
-                  opacity: .5
-                }} />
-              </TouchableOpacity>
-            ),
-            headerTransparent: true, // This makes the header transparent
-                        
-          })}
-        />
-        <Stack.Screen name="Settings" component={SettingsScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
-    </>
+    <DateContext.Provider value={{ selectedDate, setSelectedDate }}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen 
+            name="Home" 
+            component={TabNavigator} 
+            options={({ navigation }) => ({
+              title: '', 
+              headerLeft: () => (
+                <TouchableOpacity onPress={() => setSelectedDate(new Date())}>
+                  <Icon name="calendar" size={30} color="#000" style={{ 
+                    marginLeft: 12,
+                    opacity: .5,
+                    bottom: 14
+                  }} />
+                </TouchableOpacity>
+              ),
+              headerRight: () => (
+                <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+                  <Icon name="gear" size={30} color="#000" style={{ 
+                    marginRight: 12,
+                    opacity: .5,
+                    bottom: 14
+                  }} />
+                </TouchableOpacity>
+              ),
+              headerTransparent: true,     
+            })}
+          />
+          <Stack.Screen name="Settings" component={SettingsScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </DateContext.Provider>
   );
 };
 

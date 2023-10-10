@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
 
-const BACK_YEARS = 10;
-const FORWARD_YEARS = 10;
+const BACK_YEARS = 1;
+const FORWARD_YEARS = 1;
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 const CalendarComponent = () => {
@@ -32,6 +32,7 @@ const CalendarComponent = () => {
       <View style={styles.calendar} key={monthOffset}>
         <Text style={styles.monthHeading}>{months[month]}</Text>
         <Text style={styles.yearHeading}>{year}</Text>
+        <View style={styles.fullCalendar}>
         <View style={styles.headerRow}>
           {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, index) => (
             <Text key={index} style={styles.dayHeading}>{d}</Text>
@@ -51,8 +52,10 @@ const CalendarComponent = () => {
                 </Text>
               </TouchableOpacity>
             ))}
+            
           </View>
         ))}
+        </View>
       </View>
     );
   };
@@ -87,9 +90,15 @@ const CalendarComponent = () => {
 const styles = StyleSheet.create({
   calendar: {
     width: SCREEN_WIDTH,
-    padding: 15,
     top: 40,
+    padding: 10,
+    transform: [{ scale: .95 }],
+    
   },
+  fullCalendar: {
+    bottom: 40,
+    right: 6
+    },
   monthHeading: {
     fontSize: 65,
     fontWeight: 'bold',
@@ -97,7 +106,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 8,
     opacity: .35,
-    top: -40
+    top: -67
   },
   yearHeading: {
     fontSize: 25,
@@ -106,7 +115,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: -16,
     opacity: .35,
-    top: -40
+    top: -68
   },
   headerRow: {
     flexDirection: 'row',

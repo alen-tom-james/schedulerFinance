@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 25,
     marginHorizontal: 0,
+    bottom: 20,
     marginTop: 0,
     backgroundColor: 'white', // Ensuring a background color for the shadow to stand out
 

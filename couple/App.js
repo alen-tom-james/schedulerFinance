@@ -55,7 +55,11 @@ const App = () => {
             title: '', // This will remove the "Home" title
             headerRight: () => (
               <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
-                <Icon name="gear" size={30} color="#000" style={{ marginRight: 10 }} />
+                <Icon name="gear" size={30} color="#000" style={{ 
+                  marginRight: 10,
+                  bottom: 11,
+                  opacity: .5
+                }} />
               </TouchableOpacity>
             ),
             headerTransparent: true, // This makes the header transparent

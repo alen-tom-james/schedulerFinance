@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
 =======
@@ -212,3 +213,5 @@ const styles = StyleSheet.create({
 });
 
 export default CalendarComponent;
+=======
+>>>>>>> Stashed changes

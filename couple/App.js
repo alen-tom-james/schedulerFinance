@@ -27,6 +27,7 @@ const TabNavigator = () => (
         return <Icon name={iconName} size={size} color={color} />;
       },
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       tabBarLabel: () => null, // This will hide the label
 =======
       tabBarLabel: () => null,
@@ -36,11 +37,18 @@ const TabNavigator = () => (
         display: "flex"
       }, null ]
 >>>>>>> Stashed changes
+=======
+      tabBarLabel: () => null,
+      "tabBarActiveTintColor": "tomato",
+      "tabBarInactiveTintColor": "gray",
+      "tabBarStyle": [
+        {
+          "display": "flex"
+        },
+        null
+      ] // This will hide the label
+>>>>>>> Stashed changes
     })}
-    tabBarOptions={{
-      activeTintColor: 'tomato',
-      inactiveTintColor: 'gray',
-    }}
   >
     <Tab.Screen name="Calendar" component={CalendarScreen} options={{ headerShown: false }}/>
     <Tab.Screen name="Finances" component={FinancesScreen} options={{ headerShown: false }}/>

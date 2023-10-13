@@ -163,12 +163,13 @@ const styles = StyleSheet.create({
     left: 33
   },
   todayText: {
-    fontSize: 11,
+    fontSize: 25,
     position: 'absolute',
-    color: '#ff0000',
+    color: 'navy',
+    opacity: '.45',
     fontWeight: 'bold',
-    bottom: 60,
-    left: 33
+    alignContent: 'center',
+    bottom: 48
   },
   dateIconContainer: {
     position: 'absolute',

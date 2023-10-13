@@ -1,13 +1,26 @@
+<<<<<<< Updated upstream
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
+=======
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
+import { DateContext } from '../../App';  // Ensure path is correct
+>>>>>>> Stashed changes
 
 const BACK_YEARS = 10;
 const FORWARD_YEARS = 10;
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
+<<<<<<< Updated upstream
 const CalendarComponent = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const scrollX = useRef(new Animated.Value(0)).current;
+=======
+const CalendarComponent = ({ goToDayView }) => {
+  const { selectedDate, setSelectedDate } = useContext(DateContext);
+  const [currentMonth, setCurrentMonth] = useState(selectedDate);
+  const scrollViewRef = useRef(null);
+>>>>>>> Stashed changes
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -32,9 +45,38 @@ const CalendarComponent = () => {
       <View style={styles.calendar} key={monthOffset}>
         <Text style={styles.monthHeading}>{months[month]}</Text>
         <Text style={styles.yearHeading}>{year}</Text>
+<<<<<<< Updated upstream
         <View style={styles.headerRow}>
           {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, index) => (
             <Text key={index} style={styles.dayHeading}>{d}</Text>
+=======
+        <View style={styles.fullCalendar}>
+          <View style={styles.headerRow}>
+            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, index) => (
+              <Text key={index} style={styles.dayHeading}>{d}</Text>
+            ))}
+          </View>
+          {weeksArray.map((week, weekIndex) => (
+            <View key={weekIndex} style={styles.weekRow}>
+              {week.map((day, dayIndex) => (
+              <TouchableOpacity 
+              key={dayIndex} 
+              style={styles.dayCell} 
+              onPress={() => { 
+                if(day > 0) {
+                  setSelectedDate(new Date(year, month, day)); 
+                  goToDayView(); 
+                }
+              }}
+              disabled={day <= 0}
+            >
+                  <Text style={(day > 0 && day === selectedDate.getDate() && month === selectedDate.getMonth() && year === selectedDate.getFullYear()) ? styles.todayText : styles.dayText}>
+                    {day > 0 ? day : ''}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+>>>>>>> Stashed changes
           ))}
         </View>
         {weeksArray.map((week, weekIndex) => (
@@ -84,6 +126,7 @@ const CalendarComponent = () => {
   );
 };
 
+
 const styles = StyleSheet.create({
   calendar: {
     width: SCREEN_WIDTH,
@@ -97,7 +140,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 8,
     opacity: .35,
+<<<<<<< Updated upstream
     top: -40
+=======
+    top: -67,
+    color: 'navy'
+>>>>>>> Stashed changes
   },
   yearHeading: {
     fontSize: 25,
@@ -106,13 +154,20 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: -16,
     opacity: .35,
+<<<<<<< Updated upstream
     top: -40
+=======
+    top: -68,
+    color: 'navy'
+>>>>>>> Stashed changes
   },
   headerRow: {
     flexDirection: 'row',
     marginBottom: 5,
     backgroundColor: '#4b9cd3',
-    marginRight: -12
+    marginRight: -12,
+    marginLeft: 0,
+    borderRadius: 10
   },
   dayHeading: {
     textAlign: 'center',
@@ -146,12 +201,13 @@ const styles = StyleSheet.create({
     left: 33
   },
   todayText: {
-    fontSize: 11,
+    fontSize: 21,
     position: 'absolute',
-    color: '#ff0000',
+    color: 'blue',
+    opacity: '.45',
     fontWeight: 'bold',
-    bottom: 60,
-    left: 33
+    bottom: 50,
+    alignContent: 'center',
   },
 });
 

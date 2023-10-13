@@ -1,26 +1,33 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import { Calendar } from 'react-native-calendars';
 import Swiper from 'react-native-swiper';
-import CalendarComponent from './components/calendar.js';
+import CalendarComponent from './components/calendar.js';  // Ensure path is correct
+import DayView from './components/dayView.js'  // Ensure path is correct
+import WeekView from './components/weekView.js'  // Ensure path is correct
 
 const CustomCalendar = () => {
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
-  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const swiperRef = React.createRef();
+
+  const goToDayView = () => {
+    swiperRef.current.scrollBy(-1, true); // Scroll to the Day View
+  };
 
   return (
-    <Swiper style={styles.wrapper} horizontal={false} index={0} showsPagination={false}>
+    <Swiper 
+      ref={swiperRef}
+      style={styles.wrapper} 
+      horizontal={false} 
+      index={0} 
+      showsPagination={false}
+    >
       <View style={[styles.slide, styles.slideMonth]}>
-        <CalendarComponent/>
+        <CalendarComponent goToDayView={goToDayView}/>
       </View>
       <View style={[styles.slide, styles.slideWeek]}>
-        <Text style={styles.text}>Week View</Text>
-        {/* Your week view component */}
+        <WeekView />
       </View>
       <View style={[styles.slide, styles.slideDay]}>
-        <Text style={styles.text}>Day View</Text>
-        {/* Your day view component */}
+        <DayView />
       </View>
     </Swiper>
   );
@@ -29,8 +36,7 @@ const CustomCalendar = () => {
 const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
-  wrapper: {
-  },
+  wrapper: {},
   slide: {
     height: 700,
     justifyContent: 'center',
@@ -38,16 +44,13 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginHorizontal: 0,
     marginTop: 0,
-    backgroundColor: 'white', // Ensuring a background color for the shadow to stand out
-
-    // iOS shadow properties
+    backgroundColor: 'white',
     shadowColor: "#000",
-    shadowOpacity: .9,  // Half opaque
+    shadowOpacity: .9,
     shadowOffset: {
         width: 0,
         height: 2,
     },
-
   },
   slideMonth: {
     backgroundColor: '#9DD6EB',
@@ -58,27 +61,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#97CAE5',
     marginTop: 110,
     height: 900,
-
-
   },
   slideDay: {
     backgroundColor: '#92BBD9',
     height: 1000,
     marginTop: 110,
-
   },
   text: {
     color: '#fff',
     fontSize: 30,
     fontWeight: 'bold',
   },
-
-  Calendar: {
-    top: 500,
-    color: "#000"
-
-}
 });
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 export default CustomCalendar;

@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
 import { DateContext } from '../../App';  // Ensure path is correct
-const BACK_YEARS = 10;
-const FORWARD_YEARS = 10;
+
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 const CalendarComponent = ({ goToDayView }) => {
@@ -11,15 +10,24 @@ const CalendarComponent = ({ goToDayView }) => {
   const scrollViewRef = useRef(null);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setSelectedDate(new Date());
-    }, 1000);
-    return () => clearInterval(intervalId);
-  }, []);
+    scrollViewRef.current.scrollTo({ x: SCREEN_WIDTH, animated: false });
+  }, [currentMonth]);
+
+  useEffect(() => {
+    setCurrentMonth(selectedDate);
+  }, [selectedDate]);
+
+  const handleScroll = (event) => {
+    const offsetX = event.nativeEvent.contentOffset.x;
+    if (offsetX > SCREEN_WIDTH) {
+      setCurrentMonth(prevMonth => new Date(prevMonth.getFullYear(), prevMonth.getMonth() + 1));
+    } else if (offsetX < SCREEN_WIDTH) {
+      setCurrentMonth(prevMonth => new Date(prevMonth.getFullYear(), prevMonth.getMonth() - 1));
+    }
+  };
 
   const renderCalendar = (monthOffset) => {
-    const targetDate = new Date(selectedDate);
-    targetDate.setMonth(targetDate.getMonth() + monthOffset);
+    const targetDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + monthOffset);
     const year = targetDate.getFullYear();
     const month = targetDate.getMonth();
     const firstDay = new Date(year, month, 1).getDay();
@@ -61,22 +69,6 @@ const CalendarComponent = ({ goToDayView }) => {
             </View>
           ))}
         </View>
-        {weeksArray.map((week, weekIndex) => (
-          <View key={weekIndex} style={styles.weekRow}>
-            {week.map((day, dayIndex) => (
-              <TouchableOpacity 
-                key={dayIndex} 
-                style={styles.dayCell} 
-                onPress={() => { if(day > 0) setSelectedDate(new Date(year, month, day)) }}
-                disabled
-              >
-                <Text style={(day > 0 && day === selectedDate.getDate() && month === selectedDate.getMonth() && year === selectedDate.getFullYear()) ? styles.todayText : styles.dayText}>
-                  {day > 0 ? day : ''}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        ))}
       </View>
     );
   };
@@ -84,25 +76,18 @@ const CalendarComponent = ({ goToDayView }) => {
   return (
     <View style={{ flex: 1 }}>
       <Animated.ScrollView
+        ref={scrollViewRef}
         horizontal
         pagingEnabled
-        scrollEventThrottle={16}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-          { useNativeDriver: false }
-        )}
+        onMomentumScrollEnd={handleScroll}
         showsHorizontalScrollIndicator={false}
-        // Set initial offset to center around the current month
-        contentOffset={{ x: SCREEN_WIDTH * BACK_YEARS * 12 }}
+        contentOffset={{ x: SCREEN_WIDTH }}
       >
-        {Array.from({ length: BACK_YEARS * 12 + FORWARD_YEARS * 12 + 12 }).map((_, index) => {
-          const monthOffset = index - BACK_YEARS * 12;
-          return (
-            <View style={{ width: SCREEN_WIDTH }} key={index}>
-              {renderCalendar(monthOffset)}
-            </View>
-          );
-        })}
+        {[-1, 0, 1].map((monthOffset) => (
+          <View style={{ width: SCREEN_WIDTH }} key={monthOffset}>
+            {renderCalendar(monthOffset)}
+          </View>
+        ))}
       </Animated.ScrollView>
     </View>
   );
@@ -112,8 +97,13 @@ const CalendarComponent = ({ goToDayView }) => {
 const styles = StyleSheet.create({
   calendar: {
     width: SCREEN_WIDTH,
-    padding: 15,
     top: 40,
+    padding: 10,
+    transform: [{ scale: .95 }],
+  },
+  fullCalendar: {
+    bottom: 40,
+    right: 6
   },
   monthHeading: {
     fontSize: 65,
@@ -122,8 +112,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 8,
     opacity: .35,
-    top: -67,
-    color: 'navy'
+    top: -67
   },
   yearHeading: {
     fontSize: 25,
@@ -132,8 +121,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: -16,
     opacity: .35,
-    top: -68,
-    color: 'navy'
+    top: -68
   },
   headerRow: {
     flexDirection: 'row',
@@ -157,8 +145,8 @@ const styles = StyleSheet.create({
   },
   dayCell: {
     width: `${100/7}%`,
-    paddingTop: 40, 
-    paddingBottom: 40, 
+    paddingTop: 40,
+    paddingBottom: 40,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(75, 156, 211, 0.2)',
@@ -175,15 +163,35 @@ const styles = StyleSheet.create({
     left: 33
   },
   todayText: {
-    fontSize: 21,
+    fontSize: 11,
     position: 'absolute',
-    color: 'blue',
-    opacity: '.45',
+    color: '#ff0000',
     fontWeight: 'bold',
-    bottom: 50,
-    alignContent: 'center',
+    bottom: 60,
+    left: 33
+  },
+  dateIconContainer: {
+    position: 'absolute',
+    zIndex: 2,
+    left: 15,
+    top: -34,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 25,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
+  },
+  dateIcon: {
+    width: 28,
+    height: 28,
+    opacity: .35
   },
 });
 
 export default CalendarComponent;
-

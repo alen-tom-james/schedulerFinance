@@ -11,6 +11,7 @@ import React, { useState, useRef, useEffect, useContext } from 'react';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+export const DateContext = React.createContext();
 
 const TabNavigator = () => (
   <Tab.Navigator

@@ -26,30 +26,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   monthHeading: {
-    fontSize: 60,
+    fontSize: 65,
     fontWeight: 'bold',
     fontFamily: 'Impact',
     textAlign: 'center',
     opacity: .35,
-    bottom: 420,
-    color: 'blue'
+    bottom: 420
   },
   dayText: {
-    fontSize: 75,
+    fontSize: 80,
     fontWeight: 'bold',
     fontFamily: 'Impact',
     textAlign: 'center',
-    opacity: 1 ,  
-    color: 'navy',
+    opacity: 1, 
   },
   yearHeading: {
-    fontSize: 30,
+    fontSize: 35,
     fontWeight: 'bold',
     fontFamily: 'Impact',
     textAlign: 'center',
     opacity: .35,
     bottom: 430,
-    color: 'blue'
   },
 });
 

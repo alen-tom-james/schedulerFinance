@@ -74,8 +74,4 @@ const styles = StyleSheet.create({
   },
 });
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 export default CustomCalendar;

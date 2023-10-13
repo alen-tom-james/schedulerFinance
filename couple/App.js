@@ -26,18 +26,15 @@ const TabNavigator = () => (
         }
         return <Icon name={iconName} size={size} color={color} />;
       },
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
       tabBarLabel: () => null, // This will hide the label
-=======
       tabBarLabel: () => null,
       tabBarActiveTintColor: "lightblue",
       tabBarInactiveTintColor: "gray",
       tabBarStyle: [{
         display: "flex"
-      }, null ]
->>>>>>> Stashed changes
-=======
+      }, null ],
+
       tabBarLabel: () => null,
       "tabBarActiveTintColor": "tomato",
       "tabBarInactiveTintColor": "gray",
@@ -47,7 +44,6 @@ const TabNavigator = () => (
         },
         null
       ] // This will hide the label
->>>>>>> Stashed changes
     })}
   >
     <Tab.Screen name="Calendar" component={CalendarScreen} options={{ headerShown: false }}/>
@@ -56,33 +52,6 @@ const TabNavigator = () => (
   </Tab.Navigator>
 );
 
-<<<<<<< Updated upstream
-
-const App = () => {
-  return (
-    <>
-    
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen 
-          name="Home" 
-          component={TabNavigator} 
-          options={({ navigation }) => ({
-            title: '', // This will remove the "Home" title
-            headerRight: () => (
-              <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
-                <Icon name="gear" size={30} color="#000" style={{ marginRight: 10 }} />
-              </TouchableOpacity>
-            ),
-            headerTransparent: true, // This makes the header transparent
-                        
-          })}
-        />
-        <Stack.Screen name="Settings" component={SettingsScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
-    </>
-=======
 const App = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   return (
@@ -119,7 +88,6 @@ const App = () => {
         </Stack.Navigator>
       </NavigationContainer>
     </DateContext.Provider>
->>>>>>> Stashed changes
   );
 };
 

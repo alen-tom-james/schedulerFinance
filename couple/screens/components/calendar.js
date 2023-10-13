@@ -1,27 +1,14 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
-=======
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
 import { DateContext } from '../../App';  // Ensure path is correct
->>>>>>> Stashed changes
-
 const BACK_YEARS = 10;
 const FORWARD_YEARS = 10;
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-<<<<<<< Updated upstream
-const CalendarComponent = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const scrollX = useRef(new Animated.Value(0)).current;
-=======
 const CalendarComponent = ({ goToDayView }) => {
   const { selectedDate, setSelectedDate } = useContext(DateContext);
   const [currentMonth, setCurrentMonth] = useState(selectedDate);
   const scrollViewRef = useRef(null);
->>>>>>> Stashed changes
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -46,11 +33,6 @@ const CalendarComponent = ({ goToDayView }) => {
       <View style={styles.calendar} key={monthOffset}>
         <Text style={styles.monthHeading}>{months[month]}</Text>
         <Text style={styles.yearHeading}>{year}</Text>
-<<<<<<< Updated upstream
-        <View style={styles.headerRow}>
-          {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, index) => (
-            <Text key={index} style={styles.dayHeading}>{d}</Text>
-=======
         <View style={styles.fullCalendar}>
           <View style={styles.headerRow}>
             {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, index) => (
@@ -77,7 +59,6 @@ const CalendarComponent = ({ goToDayView }) => {
                 </TouchableOpacity>
               ))}
             </View>
->>>>>>> Stashed changes
           ))}
         </View>
         {weeksArray.map((week, weekIndex) => (
@@ -141,12 +122,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 8,
     opacity: .35,
-<<<<<<< Updated upstream
-    top: -40
-=======
     top: -67,
     color: 'navy'
->>>>>>> Stashed changes
   },
   yearHeading: {
     fontSize: 25,
@@ -155,12 +132,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: -16,
     opacity: .35,
-<<<<<<< Updated upstream
-    top: -40
-=======
     top: -68,
     color: 'navy'
->>>>>>> Stashed changes
   },
   headerRow: {
     flexDirection: 'row',
@@ -213,5 +186,4 @@ const styles = StyleSheet.create({
 });
 
 export default CalendarComponent;
-=======
->>>>>>> Stashed changes
+

@@ -1,4 +1,3 @@
-import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -8,6 +7,7 @@ import FinancesScreen from './screens/FinancesScreen';
 import AddEventScreen from './screens/AddEventScreen';
 import CalendarScreen from './screens/CalendarScreen'; // Ensure path is correct
 import SettingsScreen from './screens/SettingsScreen';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();

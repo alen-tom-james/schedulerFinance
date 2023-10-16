@@ -21,6 +21,7 @@ const WeekView = () => {
   const [initialScrollX, setInitialScrollX] = useState(null);
   const scrollViewRef = useRef(null);
   const verticalScrollRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     scrollViewRef.current.scrollTo({ x: WEEK_VIEW_WIDTH, animated: false });
@@ -30,7 +31,7 @@ const WeekView = () => {
     const offsetX = event.nativeEvent.contentOffset.x;
     const scrollDifference = Math.abs(offsetX - WEEK_VIEW_WIDTH);
   
-    const SCROLL_THRESHOLD = 1000;
+    const SCROLL_THRESHOLD = 100;
   
     if (scrollDifference < SCROLL_THRESHOLD) {
       // Minor scroll/tap, return to original position without changing the week
